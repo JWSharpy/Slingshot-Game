@@ -1,0 +1,12 @@
+import pygame, sys, math
+from wall import *
+
+def level(lev):
+    f = open(lev, 'r')
+    line = f.readlines()
+    f.close()
+    
+    print(line)
+    
+level("level/1.lvl")
+
