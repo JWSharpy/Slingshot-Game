@@ -34,10 +34,10 @@ class TextButton():
         
         
     def hover(self, mousePos):
-        print(self.rect, mousePos)
+        #print(self.rect, mousePos)
         if (self.rect.left < mousePos[0] < self.rect.right and
                 self.rect.top < mousePos[1] < self.rect.bottom):
-            print("hovered")
+            #print("hovered")
             self.image = self.hoverImage
         else:
             self.image = self.baseImage

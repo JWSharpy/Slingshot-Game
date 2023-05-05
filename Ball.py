@@ -44,6 +44,7 @@ class Ball():
         self.move()
         
     def update(self, size):
+        self.speedy+=self.gravity
         self.didBounceX = False 
         self.didBounceY = False 
         
@@ -53,47 +54,53 @@ class Ball():
         self.screenCollide(size)
 
     def move(self):
-        self.speedy+=self.gravity
         self.speed = [self.speedx, self.speedy]
-        
         self.posx+= self.speedx
         self.posy+= self.speedy
         self.pos = [self.posx, self.posy]
         
         self.rect.center = [int(self.posx), int(self.posy)]
         
-    def wallCollide(self, other):
+    def didCollide(self, other):
         if self.rect.right > other.rect.left:
             if self.rect.left < other.rect.right:
                 if self.rect.bottom > other.rect.top:
                     if self.rect.top < other.rect.bottom:
-                        if self.rect.centery < other.rect.centery: # above halfway
-                            ydiff = self.rect.bottom - other.rect.top
-                            if self.rect.centerx < other.rect.centerx: # left of halfway
-                                xdiff = self.rect.right - other.rect.left
-                            else:                                      # right of halfway
-                                xdiff = other.rect.right - self.rect.left
-                        else:                                      # below halfway
-                            ydiff = other.rect.bottom - self.rect.top
-                            if self.rect.centerx < other.rect.centerx: # left of halfway
-                                xdiff = self.rect.right - other.rect.left
-                            else:                                      # right of halfway
-                                xdiff = other.rect.right - self.rect.left
-                    print(xdiff, ydiff)
-                    if xdiff < ydiff:      #side colision
-                        self.speedx = -self.speedx*other.hardness
-                        self.didBounceX = True 
-                    else:
-                        if self.rect.centery > other.rect.centery:  #top colision
-                            self.speedy = -self.speedy*other.hardness
-                            self.didBounceY = True 
-                        else:
-                            self.speedy = -self.speedy*other.hardness
-                            self.didBounceY = True 
-                            self.move()
-                            if self.rect.bottom > other.rect.top:
-                                self.rect.bottom=other.rect.top
-                                self.atBottom = True
+                        return True
+        return False
+        
+    def wallCollide(self, other):
+        if self.didCollide(other):
+            if self.rect.centery < other.rect.centery: # above halfway
+                ydiff = self.rect.bottom - other.rect.top
+                if self.rect.centerx < other.rect.centerx: # left of halfway
+                    xdiff = self.rect.right - other.rect.left
+                else:                                      # right of halfway
+                    xdiff = other.rect.right - self.rect.left
+            else:                                      # below halfway
+                ydiff = other.rect.bottom - self.rect.top
+                if self.rect.centerx < other.rect.centerx: # left of halfway
+                    xdiff = self.rect.right - other.rect.left
+                else:                                      # right of halfway
+                    xdiff = other.rect.right - self.rect.left
+
+            if xdiff < ydiff:      #side colision
+                self.speedx = -self.speedx*other.hardness
+                self.didBounceX = True 
+                while self.didCollide(other):
+                    print(self.rect, other.rect)
+                    self.move()
+            else:
+                if self.rect.centery > other.rect.centery:  #top colision
+                    self.speedy = -self.speedy*other.hardness
+                    self.didBounceY = True 
+                else:
+                    self.speedy = -self.speedy*other.hardness
+                    self.didBounceY = True 
+                    self.move()
+                    if self.rect.bottom > other.rect.top:
+                        self.rect.bottom=other.rect.top
+                        self.atBottom = True
         return False
         
         

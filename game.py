@@ -13,7 +13,6 @@ size = [1000, 1000]
 screen = pygame.display.set_mode(size)
 
 
-walls = loadLevel("1.lvl")
 mode = "title"
 mode = "MainMenu"
 lev = 1
@@ -193,9 +192,9 @@ while True:
                 
                 for lb in levelButtons:
                     if lb.clickUp(event.pos):
-                        theLevel = lb.name
-                        print(theLevel)
-                        mode = "game"
+                        lev = lb.name
+                        print(lev)
+                        mode = "game" 
                 
                 if backButton.clickUp(event.pos):
                     backList.remove(backList[-1])
@@ -215,7 +214,8 @@ while True:
     
     #-----GAME------
     ball=Ball(1,350,[1000/2,1000/2])
-    tiles = loadLevel(str(lev)+".lvl")
+    walls = loadLevel("Level/"+str(lev)+".lvl")
+    
     while mode == "game":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
